@@ -322,16 +322,37 @@
 
 /* Close button */
 .close {
-  color: rgba(255, 255, 255, 0.8);
-  float: right;
-  font-size: 28px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 24px;
   font-weight: bold;
   position: absolute;
-  right: 1rem;
-  top: 1rem;
+  right: 2rem;
+  top: 2rem;
   cursor: pointer;
   transition: all 0.3s ease;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  
+  /* 液态玻璃质感 */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  
+  /* 圆形设计 */
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  /* ×符号居中 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* 阴影效果 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  
+  /* 移除默认浮动 */
+  float: none;
 }
 
 .close:hover,
@@ -339,8 +360,12 @@
   color: white;
   text-decoration: none;
   cursor: pointer;
-  transform: rotate(90deg) scale(1.1);
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  
+  /* 增强液态玻璃质感 */
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
   /* 底部用户代理信息 */
@@ -395,12 +420,16 @@
   }
   
   .close {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
   }
   
   .close:hover,
   .close:focus {
     color: white;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
   }
   
   .updates-button {
@@ -440,7 +469,7 @@
   }
   
   .close {
-    right: 0.5rem;
-    top: 0.5rem;
+    right: 1rem;
+    top: 1rem;
   }
 }
