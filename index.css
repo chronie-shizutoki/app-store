@@ -305,7 +305,7 @@
 
 /* Modal content */
 .modal-content {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.75);
   margin: 5% auto;
   padding: 2rem;
   border-radius: 20px;
@@ -330,7 +330,6 @@
 
 /* Close button */
 .close {
-  color: rgba(255, 255, 255, 0.9);
   font-size: 24px;
   font-weight: bold;
   position: absolute;
