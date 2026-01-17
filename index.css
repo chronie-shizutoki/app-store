@@ -64,28 +64,6 @@
   padding: 1.25rem 1.5rem;
   transition: all 0.3s ease;
   position: relative;
-  overflow: hidden;
-}
-
-.app-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-  transition: left 0.5s ease;
-}
-
-.app-card:hover::before {
-  left: 100%;
-}
-
-.app-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.4);
-  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .app-icon {
@@ -191,6 +169,7 @@
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.android-version,
 .update-data {
   display: block;
   font-size: 0.9rem;
@@ -265,7 +244,7 @@
 .updates-button {
   background: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 0.75rem;
   font-size: 1rem;
   font-weight: 500;
   border-radius: 12px;
@@ -300,27 +279,34 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
+  /* 支持脚本修改背景色的平滑过渡 */
+  transition: background-color 260ms ease;
   animation: fadeIn 0.3s ease;
 }
 
 /* Modal content */
 .modal-content {
   background: rgba(255, 255, 255, 0.75);
-  margin: 5% auto;
   padding: 2rem;
   border-radius: 20px;
   width: 90%;
   max-width: 500px;
   max-height: 80vh;
   overflow-y: auto;
-  position: relative;
-  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  animation: none; /* 我们用 JS 控制动画 */
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  
+
   /* 隐藏滚动条 */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
+  /* 使 transform 动画更平滑、并允许脚本设置初始 translate */
+  transform-origin: center center;
+  will-change: transform;
 }
 
 /* 隐藏滚动条 - Chrome, Safari */
@@ -328,57 +314,70 @@
   display: none;
 }
 
-/* Close button */
+/* Close button (重构为 macOS 风格缩小窗口按钮，保留液态玻璃质感) */
 .close {
-  font-size: 24px;
-  font-weight: bold;
   position: absolute;
-  right: 2rem;
-  top: 2rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  
-  /* 液态玻璃质感 */
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  
-  /* 圆形设计 */
-  width: 45px;
-  height: 45px;
+  left: 1.25rem;
+  top: 1.25rem;
+
+  /* 小型圆形，贴近 macOS 最小化按钮尺寸 */
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  
-  /* ×符号居中 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  /* 阴影效果 */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  
-  /* 移除默认浮动 */
-  float: none;
+
+  /* 典型的 macOS 黄橘色视觉 */
+  background: linear-gradient(180deg, #ffefb8 0%, #ffbf4d 60%);
+  border: 1px solid rgba(0, 0, 0, 0.13);
+
+  /* 保留液态玻璃/模糊视觉，但更轻量 */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  /* 光泽与内阴影，营造立体感 */
+  box-shadow: 0 1px 0 rgba(255,255,255,0.45) inset, 0 3px 8px rgba(0,0,0,0.22);
+
+  /* 隐藏文本（若按钮在 HTML 中含短横号）并保留可访问性 */
+  color: transparent;
+  text-indent: -9999px;
+
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .close:hover,
 .close:focus {
-  color: white;
-  text-decoration: none;
-  cursor: pointer;
-  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  
-  /* 增强液态玻璃质感 */
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  transform: scale(1.08);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.55) inset, 0 5px 12px rgba(0,0,0,0.28);
+  outline: none;
+  filter: brightness(1.02);
+}
+
+/* 小横线图标（伪元素） */
+.close::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.62);
+  border-radius: 1px;
+  transition: background 120ms ease, transform 120ms ease;
+  pointer-events: none; /* 不影响点击 */
+}
+
+.close:hover::after,
+.close:focus::after {
+  background: rgba(0, 0, 0, 0.8);
+  transform: translate(-50%, -50%) scaleX(1.05);
 }
 
   /* 底部用户代理信息 */
   #user-agent {
     display: block;
-    margin-top: 2rem;
     text-align: center;
     opacity: 0.7;
     font-size: 0.8rem;
@@ -427,16 +426,28 @@
   }
   
   .close {
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.15);
+    /* 深色模式下保持黄色按钮的可见性与微调边框 */
+    background: linear-gradient(180deg, #ffefb8 0%, #ffb44a 60%);
+    border: 1px solid rgba(0, 0, 0, 0.22);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset, 0 4px 10px rgba(0,0,0,0.35);
+    color: transparent;
   }
-  
+
   .close:hover,
   .close:focus {
-    color: white;
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.08);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.55) inset, 0 6px 14px rgba(0,0,0,0.38);
+    outline: none;
+  }
+
+  /* 深色模式下伪元素颜色调整 */
+  .close::after {
+    background: rgba(0, 0, 0, 0.78);
+  }
+
+  .close:hover::after,
+  .close:focus::after {
+    background: rgba(0, 0, 0, 0.92);
   }
   
   .updates-button {
@@ -445,6 +456,7 @@
     border-color: rgba(255, 255, 255, 0.2);
   }
 
+  .android-version,
   .update-data {
     color: #bbb;
   }
@@ -480,7 +492,7 @@
   }
   
   .close {
-    right: 1rem;
+    left: 1rem;
     top: 1rem;
   }
 }
